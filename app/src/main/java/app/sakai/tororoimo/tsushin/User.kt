@@ -3,9 +3,9 @@ package app.sakai.tororoimo.tsushin
 import com.google.gson.annotations.SerializedName
 
 data class User(
-    val naem: String,
+    val name: String,
     @SerializedName("login") val userId: String,
-    @SerializedName("avater_url") val avatar_url: String,
+    @SerializedName("avatar_url") val avatarUrl: String,
     val following: Int,
     val followers: Int
 )

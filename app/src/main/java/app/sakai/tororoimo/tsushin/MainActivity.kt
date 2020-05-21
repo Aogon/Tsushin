@@ -2,9 +2,15 @@ package app.sakai.tororoimo.tsushin
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import coil.api.load
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -21,5 +27,21 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         val userService: UserService = retrofit.create(UserService::class.java)
+
+        requestButton.setOnClickListener {
+            runBlocking(Dispatchers.IO) {
+                runCatching {
+                    userService.getUser("Aogon")
+                }
+            }.onSuccess {
+                avatarImageView.load(it.avatarUrl)
+                nameTextView.text = it.name
+                userIdTextView.text = it.userId
+                followersTextView.text = it.following.toString()
+                followersTextView.text = it.followers.toString()
+            }.onFailure {
+                Toast.makeText(this, "失敗", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }
